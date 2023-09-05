@@ -1,6 +1,7 @@
 package database
 
 import (
+	"echo-graphql-jwt/models"
 	model "echo-graphql-jwt/models/graph"
 	"echo-graphql-jwt/utils"
 	"fmt"
@@ -26,5 +27,5 @@ func Init() {
 		panic("failed to connect database")
 	}
 
-	DB.AutoMigrate(&model.Post{})
+	DB.AutoMigrate(&model.Post{}, &models.User{})
 }
