@@ -1,23 +1,28 @@
 package routes
 
 import (
+	"context"
 	"echo-graphql-jwt/database"
 	"echo-graphql-jwt/graph"
-	"echo-graphql-jwt/handlers"
+	"echo-graphql-jwt/middlewares"
 	"echo-graphql-jwt/utils"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
-	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
 )
 
 func Init() *echo.Echo {
 	e := echo.New()
 
-	e.POST("api/auth/register", handlers.Register)
-	e.POST("api/auth/login", handlers.Login)
+	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			gqlCtx := context.WithValue(c.Request().Context(), utils.EchoContextKey, c)
+			c.SetRequest(c.Request().WithContext(gqlCtx))
+			return next(c)
+		}
+	})
 
-	e.POST("/query", graphqlHandler(), echojwt.WithConfig(utils.JwtConfig))
+	e.POST("/query", graphqlHandler(), middlewares.SkipAuthForLoginAndRegister)
 	e.GET("/", playgroundHandler())
 
 	return e

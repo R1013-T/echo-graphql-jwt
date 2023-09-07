@@ -9,6 +9,16 @@ type Query {
     posts: [Post!]!
 }
 
+type AuthResponse {
+    token: String!
+    user: User!
+}
+
+type User {
+    id: ID!
+    email: String!
+}
+
 input CreatePostInput {
     id: ID!
     title: String!
@@ -26,6 +36,8 @@ input DeletePostInput {
 }
 
 type Mutation {
+    register(name: String!, email: String!, password: String!): AuthResponse!
+    login(email: String!, password: String!): AuthResponse!
     createPost(input: CreatePostInput!): Post!
     updatePost(input: UpdatePostInput!): Post!
     deletePost(input: DeletePostInput!): Post!

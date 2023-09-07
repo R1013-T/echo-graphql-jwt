@@ -2,6 +2,11 @@
 
 package model
 
+type AuthResponse struct {
+	Token string `json:"token"`
+	User  *User  `json:"user"`
+}
+
 type CreatePostInput struct {
 	ID      string `json:"id"`
 	Title   string `json:"title"`
@@ -22,4 +27,9 @@ type UpdatePostInput struct {
 	ID      string  `json:"id"`
 	Title   *string `json:"title,omitempty"`
 	Content *string `json:"content,omitempty"`
+}
+
+type User struct {
+	ID    string `json:"id"`
+	Email string `json:"email"`
 }
